@@ -64,7 +64,8 @@ impl<'a> Player<'a>{
             for (i, c) in self.game.solution.chars().enumerate() {
                 // 
                 if( c == *first_c) {
-                    self.game.word_hidden.replace_range(i..i+1, c.to_string().as_str()); // on remplace le mot trouver et on s'arrete au caractere suivant 
+                    self.game.word_hidden.replace_range(i..i+1, c.to_string().as_str()); // on remplace le caractere trouver et on s'arrete au caractere suivant 
+                    println!("Bien jouer, on continue, le mot cacher est {}", self.game.word_hidden);
                 }
 
             }
@@ -152,9 +153,11 @@ impl<'a> Player<'a>{
 
     self.pv -= 1;
     let mut indice : usize = (6 - self.pv).into();
-    println!("{}", &tab[indice]);
+    println!("vous avez echouer \n{}", &tab[indice]);
+    println!("le mot cacher est : {}", self.game.word_hidden);
+    
     if (self.pv == 0){
-        println!("Vous etes mort !");
+        println!("Vous etes mort ! le mot cacher etait {}", self.game.solution);
         std::process::exit(1);
         }
     }
@@ -169,7 +172,8 @@ impl Pendu{
         dict.insert("eliot".to_string());
         dict.insert("remy".to_string());
         dict.insert("ronald".to_string());
-        dict.insert("pain".to_string()); 
+        dict.insert("pain".to_string());
+        dict.insert("binks".to_string());
 
         Self{
             dict : dict,
@@ -185,7 +189,7 @@ impl Pendu{
         match v.choose(&mut rand::rng()){ // on attend un return Option<&Self::Item> permet d'eviter de pointer sur none et match permet d'etre dans le cas de Some ou None
         // si il y a rien dans le dictionnaire cela permet d'eviter au compilateur de buger
             Some(i) => {
-                println!("{}", i);
+                //println!("{}", i);
                 self.solution = i.to_string();
             },
             None =>{
@@ -215,6 +219,7 @@ impl Pendu{
         
         match self.solution.as_str().chars().last(){
             Some(i) => {
+
                 new_word.push(i);
             },
             None =>{
@@ -223,6 +228,11 @@ impl Pendu{
             }
         }
         self.word_hidden = new_word;
+        
+       
+        println!("Voici le mot a trouver : {}", self.word_hidden);
+       
+
 
     }
 
@@ -236,12 +246,12 @@ pub fn main(){
 
     game.set_solution();
     game.set_prop();
-    println!("{:?}",game);
+    //println!("{:?}",game);
 
     {
         let mut player = Player::new(&mut game);
         loop{
-            println!("{:#?}",player);
+            //println!("{:?}",player);
             player.set_letter();
         }     
     }
